@@ -70,17 +70,18 @@ function callApp(appName) {
     return;
   }
 
-  fetch(
-    "https://script.google.com/macros/s/AKfycbyIphiUSUaEpeBjLvPHLAK3va3VkDJp0kI5v0dTEwO2LQhYI7ivVPC6zmi5jLOALB4/exec?app=" + appName,
-    {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + idToken,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ action: "test" })
-    }
-  )
+fetch(
+  "https://script.google.com/macros/s/AKfycbyIphiUSUaEpeBjLvPHLAK3va3VkDJp0kI5v0dTEwO2LQhYI7ivVPC6zmi5jLOALB4/exec?app=" + appName,
+  {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer " + idToken,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ action: "test" })
+  }
+)
+
   .then(r => r.text())
   .then(t => document.getElementById("output").textContent = t)
   .catch(err => alert("Error calling app"));

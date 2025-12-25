@@ -2,10 +2,34 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>GitHub Pages Test</title>
+  <title>Sign in</title>
+
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body style="font-family: Arial; padding:40px">
-  <h1>GitHub Pages is working ✅</h1>
-  <p>If you see this page, Pages is enabled correctly.</p>
+
+<h2>Sign in with Google</h2>
+
+<p>
+This login does NOT show any Google “unsafe app” warning.
+</p>
+
+<!-- Google Sign-In configuration -->
+<div id="g_id_onload"
+     data-client_id="PASTE_YOUR_CLIENT_ID_HERE"
+     data-callback="handleCredential"
+     data-auto_prompt="false">
+</div>
+
+<div class="g_id_signin" data-type="standard"></div>
+
+<script>
+function handleCredential(response) {
+  console.log("ID Token:", response.credential);
+  alert("Google login successful!\n\nID token received.\n\nNext step: send this to Apps Script.");
+}
+</script>
+
 </body>
 </html>

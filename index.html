@@ -1,73 +1,163 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Support Centre</title>
+  <title>Support Centre | Portal Login</title>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
+    /* Clean, modern resets */
+    * { box-sizing: border-box; }
+    
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f4f8;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #f4f7f9;
+      background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       margin: 0;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      padding: 20px;
-      box-sizing: border-box;
+      min-height: 100vh;
+      padding: 15px;
     }
-    .login-card {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+
+    .login-container {
+      background: #ffffff;
+      padding: 40px 30px;
+      border-radius: 16px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
       width: 100%;
-      max-width: 350px;
+      max-width: 400px;
       text-align: center;
     }
-    img.logo {
-      max-width: 120px;
-      height: auto;
-      margin-bottom: 20px;
+
+    .brand-logo {
+      width: 80px;
+      height: 80px;
+      background: #f0f4f8;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
+
+    .brand-logo img {
+      width: 50px;
+      height: auto;
+    }
+
     h2 {
-      color: #333;
-      font-size: 1.5rem;
+      color: #2d3748;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin: 0 0 8px;
+    }
+
+    p.subtitle {
+      color: #718096;
+      font-size: 0.95rem;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      text-align: left;
       margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #4a5568;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    select {
+      width: 100%;
+      height: 48px;
+      padding: 0 15px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #2d3748;
+      background-color: #fff;
+      transition: border-color 0.2s;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a0aec0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .signin-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .footer-text {
+      margin-top: 30px;
+      font-size: 0.8rem;
+      color: #a0aec0;
     }
   </style>
 </head>
 
 <body>
 
-<div class="login-card">
-  <img src="https://via.placeholder.com/120x60?text=LOGO" alt="Logo" class="logo">
+<div class="login-container">
+  <div class="brand-logo">
+    <img src="https://cdn-icons-png.flaticon.com/512/3119/3119338.png" alt="Logo">
+  </div>
 
-  <h2>Login to Support Centre</h2>
+  <h2>Welcome Back</h2>
+  <p class="subtitle">Please select a tool to continue</p>
 
-  <div style="display: flex; justify-content: center;">
+  <div class="form-group">
+    <label for="appSelect">Destination Portal</label>
+    <select id="appSelect">
+      <option value="https://sites.google.com/view/test-reminder-oauth">Reminder Dashboard</option>
+      <option value="https://script.google.com/view/chew251">My Weather</option>
+      <option value="https://script.google.com/view/chew253">Traffic</option>
+    </select>
+  </div>
+
+  <div class="signin-wrapper">
     <div id="g_id_onload"
-         data-client_id="212447856028-6gftma5mka184ov2k843kvo3d45pic4h.apps.googleusercontent.com"
+         data-client_id="212337856028-6gftma5mka184ov2k843kvo3d45pic4h.apps.googleusercontent.com"
          data-callback="onLogin"
          data-auto_prompt="false">
     </div>
 
     <div class="g_id_signin" 
          data-type="standard" 
-         data-shape="pill" 
+         data-shape="rectangular" 
          data-theme="filled_blue" 
          data-text="signin_with" 
-         data-size="large">
+         data-size="large"
+         data-logo_alignment="left"
+         data-width="340">
     </div>
+  </div>
+
+  <div class="footer-text">
+    &copy; 2025 Support Centre Security
   </div>
 </div>
 
 <script>
 function onLogin(res) {
-  alert("Login OK");
-  window.location.href = "https://sites.google.com/view/test-reminder-oauth";
+  const targetUrl = document.getElementById("appSelect").value;
+  // Professional systems often show a brief loading state here
+  window.location.href = targetUrl;
 }
 </script>
 

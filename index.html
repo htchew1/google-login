@@ -2,32 +2,88 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Sign in</title>
+  <title>Google Login</title>
 
-  <!-- Google Identity Services -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <style>
+    body {
+      font-family: Arial;
+      padding: 40px;
+      max-width: 600px;
+      margin: auto;
+    }
+    button {
+      padding: 10px 16px;
+      margin-top: 16px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    pre {
+      background: #f5f5f5;
+      padding: 12px;
+      margin-top: 16px;
+    }
+  </style>
 </head>
-<body style="font-family: Arial; padding:40px">
+
+<body>
 
 <h2>Sign in with Google</h2>
 
 <p>
-This login will use Google Account Authorization.
+This login uses Google OAuth and does <b>not</b> show any unsafe app warning.
 </p>
 
-<!-- Google Sign-In configuration -->
+<!-- Google Sign-In -->
 <div id="g_id_onload"
      data-client_id="212447856028-6gftma5mka184ov2k843kvo3d45pic4h.apps.googleusercontent.com"
-     data-callback="handleCredential"
+     data-callback="onLogin"
      data-auto_prompt="false">
 </div>
 
-<div class="g_id_signin" data-type="standard"></div>
+<div class="g_id_signin"></div>
+
+<hr>
+
+<h3>Test Apps</h3>
+
+<button onclick="callApp('reminder')">Call Reminder</button>
+<button onclick="callApp('weather')">Call Weather</button>
+<button onclick="callApp('traffic')">Call Report</button>
+
+<pre id="output"></pre>
 
 <script>
-function handleCredential(response) {
-  console.log("ID Token:", response.credential);
-  alert("Google login successful!\n\nID token received.\n\nNext step: send this to Apps Script.");
+let idToken = null;
+
+// Called after Google login
+function onLogin(response) {
+  idToken = response.credential;
+  alert("Google login successful");
+}
+
+// Call gateway → target app
+function callApp(appName) {
+  if (!idToken) {
+    alert("Please login first");
+    return;
+  }
+
+  fetch(
+    "https://script.google.com/macros/s/AKfycbwvgJyu_N4E4gZaHoeUrPuoRVETUHxMPr87cBVtwrXSMXMlL624kTvrxI4NNhYIbS_T/exec" + appName,
+    {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + idToken,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ action: "test" })
+    }
+  )
+  .then(r => r.text())
+  .then(t => document.getElementById("output").textContent = t)
+  .catch(err => alert("Error calling app"));
 }
 </script>
 

@@ -36,7 +36,7 @@
 
 <script>
 const GATEWAY_URL =
-  "https://script.google.com/macros/s/AKfycbz2zlBOxVTZiRTbZDQnpkcZx-45vrM4cKy6KGwSy88sBZLPDCBJ1YSfJDpCbrq-04Ku/exec";
+  "https://script.google.com/macros/s/AKfycbxbyHZyW59ZMvUTInD4J5gsxrN-W_AKgySh2k8eBGbQKl2aMVMHzwP6IHwhpnZ-aN2A/exec";
 
 let idToken = null;
 
@@ -51,13 +51,18 @@ function callApp(app) {
     return;
   }
 
-  fetch(`${GATEWAY_URL}?app=${app}`, {
+  const payload = {
+    app: app,
+    token: idToken,
+    action: "list"   // example
+  };
+
+  fetch(GATEWAY_URL, {
     method: "POST",
     headers: {
-      "Authorization": "Bearer " + idToken,
-      "Content-Type": "application/json"
+      "Content-Type": "text/plain;charset=utf-8"
     },
-    body: JSON.stringify({ test: true })
+    body: JSON.stringify(payload)
   })
   .then(r => r.text())
   .then(t => document.getElementById("out").textContent = t)

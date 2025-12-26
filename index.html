@@ -77,23 +77,6 @@
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    #lastLoginMsg {
-      margin-top: 20px;
-      font-size: 0.8rem;
-      color: #718096;
-      display: none;
-    }
-
-    .logout-btn {
-      margin-top: 10px;
-      font-size: 0.75rem;
-      color: #667eea;
-      background: none;
-      border: none;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-
     .footer-text { margin-top: 30px; font-size: 0.8rem; color: #a0aec0; }
   </style>
 </head>
@@ -116,11 +99,9 @@
   <div class="form-group">
     <label for="appSelect">Destination Portal</label>
     <select id="appSelect">
-      <option value="https://sites.google.com/view/test-reminder-oauth">Reminder Dashboard</option>
+      <option value="https://sites.google.com/view/test-reminder-oauth">Reminder Oauth</option>
       <option value="https://sites.google.com/view/chew251">My Weather</option>
       <option value="https://sites.google.com/view/chew250">Optimal Route</option>
-      <option value="https://script.google.com/macros/s/AKfycby81qPSgPWhNFcxle-PB2KwLmLE0wDwjLIs5hSn02AbzrwM-UPa65DaSuueshdq7qkOjQ/exec">Reminder Apps script</option>
- 
     </select>
   </div>
 
@@ -137,50 +118,30 @@
     </div>
   </div>
 
-  <div id="lastLoginMsg"></div>
-  <button id="logoutBtn" class="logout-btn" style="display:none;" onclick="clearMemory()">Reset App Choice</button>
-
   <div class="footer-text">&copy; 2025 Support Centre Security</div>
 </div>
 
 <script>
+  // STEP 1: LOAD SAVED CHOICE
   window.onload = function() {
     const lastApp = localStorage.getItem("selectedApp");
-    const lastTime = localStorage.getItem("lastLoginTime");
-    const msgDiv = document.getElementById("lastLoginMsg");
-    const logoutBtn = document.getElementById("logoutBtn");
-
     if (lastApp) {
       document.getElementById("appSelect").value = lastApp;
-      logoutBtn.style.display = "inline-block";
-    }
-
-    if (lastTime) {
-      msgDiv.style.display = "block";
-      msgDiv.innerText = "Last visit: " + lastTime;
     }
   };
-
-  function clearMemory() {
-    localStorage.removeItem("selectedApp");
-    localStorage.removeItem("lastLoginTime");
-    alert("Memory cleared. Page will refresh.");
-    location.reload();
-  }
 
   async function onLogin(res) {
     const targetUrl = document.getElementById("appSelect").value;
     const loader = document.getElementById("loader");
 
-    // Save choice and timestamp
-    const now = new Date().toLocaleString();
+    // STEP 2: SAVE CHOICE TO PHONE MEMORY
     localStorage.setItem("selectedApp", targetUrl);
-    localStorage.setItem("lastLoginTime", now);
     
+    // STEP 3: SHOW SPINNER
     loader.style.display = "flex";
 
-    // Your Gateway URL
-    const gatewayUrl = "https://script.google.com/macros/s/AKfycby2_TDVS7A1lJ-u7KCm14U5Vt27MDPTviBMY4arfZI_FmT74Q-bL6sUuRngoS8-yDpP/exec";
+    // IMPORTANT: Replace this with your actual Gateway Script URL
+    const gatewayUrl = "https://script.google.com/macros/s/AKfycbzZcB3-r8S2gRLA92ZLlHbJm9BXFDbzeqOu9oac39HyrYXyl7h0Kh-yLU-iIIniesx3/exec";
 
     try {
       const response = await fetch(`${gatewayUrl}?token=${res.credential}`);

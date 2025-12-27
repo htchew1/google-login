@@ -102,6 +102,7 @@
       <option value="https://sites.google.com/view/test-reminder-oauth">Reminder Oauth</option>
       <option value="https://sites.google.com/view/chew251">My Weather</option>
       <option value="https://sites.google.com/view/chew250">Optimal Route</option>
+      <option value="https://script.google.com/macros/s/AKfycbxfUdAiW68MBXtFHcS7ljISXONbPml6lwtjFXAgOztXgqiGDfdBwOt9n6l4AbLhYmTNog/exec">Test 1min Ticket</option>      
     </select>
   </div>
 
@@ -131,33 +132,32 @@
   };
 
   async function onLogin(res) {
-    const targetUrl = document.getElementById("appSelect").value;
-    const loader = document.getElementById("loader");
+  const targetUrl = document.getElementById("appSelect").value;
+  const loader = document.getElementById("loader");
+  localStorage.setItem("selectedApp", targetUrl);
+  loader.style.display = "flex";
 
-    // STEP 2: SAVE CHOICE TO PHONE MEMORY
-    localStorage.setItem("selectedApp", targetUrl);
-    
-    // STEP 3: SHOW SPINNER
-    loader.style.display = "flex";
+  // Replace with your current Gateway URL
+  const gatewayUrl = "https://script.google.com/macros/s/AKfycbx3i5t9W7WNHcAs5DMfYRcxsMoErYBLH1oJahi7pAwYLnlaZzNLzEb5zhcM-2SeLxZA/exec";
 
-    // IMPORTANT: Replace this with your actual Gateway Script URL
-    const gatewayUrl = "https://script.google.com/macros/s/AKfycbzZcB3-r8S2gRLA92ZLlHbJm9BXFDbzeqOu9oac39HyrYXyl7h0Kh-yLU-iIIniesx3/exec";
+  try {
+    const response = await fetch(`${gatewayUrl}?token=${res.credential}`);
+    const data = await response.json();
 
-    try {
-      const response = await fetch(`${gatewayUrl}?token=${res.credential}`);
-      const data = await response.json();
-
-      if (data.status === "allowed") {
-        window.location.href = targetUrl;
-      } else {
-        loader.style.display = "none";
-        alert("Access Denied: Your email is not on the allow-list.");
-      }
-    } catch (error) {
+    if (data.status === "allowed") {
+      // Append the ticket to the URL
+      const separator = targetUrl.includes('?') ? '&' : '?';
+      const finalUrl = targetUrl + separator + "ticket=" + encodeURIComponent(data.ticket);
+      window.location.href = finalUrl;
+    } else {
       loader.style.display = "none";
-      alert("Connection error. Please check your Gateway URL.");
+      alert("Access Denied: You are not on the allow-list.");
     }
+  } catch (error) {
+    loader.style.display = "none";
+    alert("Connection error.");
   }
+}
 </script>
 
 </body>

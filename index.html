@@ -127,7 +127,15 @@
 </div>
 
 <script>
-  // STEP 1: LOAD SAVED CHOICE
+  // BACK BUTTON FIX: This hides the loader if the user returns to this page
+  window.onpageshow = function(event) {
+    const loader = document.getElementById("loader");
+    if (loader) {
+      loader.style.display = "none";
+    }
+  };
+
+  // STEP 1: LOAD SAVED CHOICE (Your original code)
   window.onload = function() {
     const lastApp = localStorage.getItem("selectedApp");
     if (lastApp) {
@@ -135,33 +143,34 @@
     }
   };
 
+  // STEP 2: LOGIN LOGIC (Your original code)
   async function onLogin(res) {
-  const targetUrl = document.getElementById("appSelect").value;
-  const loader = document.getElementById("loader");
-  localStorage.setItem("selectedApp", targetUrl);
-  loader.style.display = "flex";
+    const targetUrl = document.getElementById("appSelect").value;
+    const loader = document.getElementById("loader");
+    localStorage.setItem("selectedApp", targetUrl);
+    
+    // Show the loading screen
+    loader.style.display = "flex";
 
-  // Replace with your current Gateway URL (gateway email-allow)
-  const gatewayUrl = "https://script.google.com/macros/s/AKfycbyMjiWPySRl_NTESEPXb5MM9U-cA5NOhBKqyXijqjzbANdJeLAPu9N9jMGT4hk6HR4/exec";
+    const gatewayUrl = "https://script.google.com/macros/s/AKfycbyMjiWPySRl_NTESEPXb5MM9U-cA5NOhBKqyXijqjzbANdJeLAPu9N9jMGT4hk6HR4/exec";
 
-  try {
-    const response = await fetch(`${gatewayUrl}?token=${res.credential}`);
-    const data = await response.json();
+    try {
+      const response = await fetch(`${gatewayUrl}?token=${res.credential}`);
+      const data = await response.json();
 
-    if (data.status === "allowed") {
-      // Append the ticket to the URL
-      const separator = targetUrl.includes('?') ? '&' : '?';
-      const finalUrl = targetUrl + separator + "ticket=" + encodeURIComponent(data.ticket);
-      window.location.href = finalUrl;
-    } else {
+      if (data.status === "allowed") {
+        const separator = targetUrl.includes('?') ? '&' : '?';
+        const finalUrl = targetUrl + separator + "ticket=" + encodeURIComponent(data.ticket);
+        window.location.href = finalUrl;
+      } else {
+        loader.style.display = "none";
+        alert("Access Denied: You are not on the allow-list.");
+      }
+    } catch (error) {
       loader.style.display = "none";
-      alert("Access Denied: You are not on the allow-list.");
+      alert("Connection error.");
     }
-  } catch (error) {
-    loader.style.display = "none";
-    alert("Connection error.");
   }
-}
 </script>
 
 </body>
